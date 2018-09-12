@@ -85,3 +85,10 @@ static int gettok()
     LastChar = getchar();
     return ThisChar;
 }
+
+/// getNextToken reads another token from the lexer and updates CurTok with its results.
+/// This allows us to look one token ahead at what the lexer is returning.
+static int getNextToken()
+{
+    return CurTok = gettok();
+}
