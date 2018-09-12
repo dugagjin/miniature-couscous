@@ -1,3 +1,5 @@
+// global variables are used for simplicity, should be removed in the future.
+
 #include <algorithm>
 #include <cctype>
 #include <cstdio>
@@ -7,21 +9,10 @@
 #include <string>
 #include <vector>
 
-// The lexer returns tokens [0-255] if it is an unknown character, otherwise one
-// of these for known things.
-enum Token
-{
-    tok_eof = -1,
+#include "lexer/lexer.h"
+#include "lexer/token.h"
 
-    // commands
-    tok_def = -2,
-    tok_extern = -3,
-
-    // primary
-    tok_identifier = -4,
-    tok_number = -5,
-};
-
+int CurTok;
 static std::string IdentifierStr; // Filled in if tok_identifier
 static double NumVal;             // Filled in if tok_number
 
@@ -36,8 +27,9 @@ static int gettok()
         LastChar = getchar();
     }
 
+    // identifier: [a-zA-Z][a-zA-Z0-9]*
     if (isalpha(LastChar))
-    { // identifier: [a-zA-Z][a-zA-Z0-9]*
+    {
         IdentifierStr = LastChar;
         while (isalnum((LastChar = getchar())))
         {
@@ -54,9 +46,9 @@ static int gettok()
         return tok_identifier;
     }
 
+    // Number: [0-9.]+
     if (isdigit(LastChar) || LastChar == '.')
     {
-        // Number: [0-9.]+
         std::string NumStr;
         do
         {
@@ -68,12 +60,13 @@ static int gettok()
         return tok_number;
     }
 
+    // Comment until end of line.
     if (LastChar == '#')
     {
-        // Comment until end of line.
         do
+        {
             LastChar = getchar();
-        while (LastChar != EOF && LastChar != '\n' && LastChar != '\r');
+        } while (LastChar != EOF && LastChar != '\n' && LastChar != '\r');
 
         if (LastChar != EOF)
         {
@@ -81,7 +74,7 @@ static int gettok()
         }
     }
 
-    // Check for end of file.  Don't eat the EOF.
+    // Check for end of file. Don't eat the EOF.
     if (LastChar == EOF)
     {
         return tok_eof;
