@@ -1,14 +1,5 @@
 // global variables are used for simplicity, should be removed in the future.
 
-#include <algorithm>
-#include <cctype>
-#include <cstdio>
-#include <cstdlib>
-#include <map>
-#include <memory>
-#include <string>
-#include <vector>
-
 #include "lexer/lexer.h"
 #include "lexer/token.h"
 
